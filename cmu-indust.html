@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CMU Indust | Extracción y reconstrucción de señal a gran escala</title>
+<meta name="description" content="CMU Indust aísla, reconstruye y preserva señales críticas en entornos de alta entropía, sin la latencia ni las suposiciones del filtrado tradicional. Diagnóstico, piloto e integración para entornos industriales.">
+
+<!-- ====================================================================
+     NOTAS DE FIDELIDAD (revisar antes de publicar, luego borrar):
+     - Sectores activos = solo los 5 con respaldo en el whitepaper.
+       Redes Electricas, Sismologia y Dispositivos Medicos quedan FUERA
+       hasta validar fuente con Erick. Buscar "SECTORES SIN FUENTE".
+     - Sin lenguaje de patentes. Solo secreto industrial / licenciamiento.
+     - Overclaims absolutistas suavizados a lenguaje defendible.
+     - Footer: reemplazar [RAZON SOCIAL] por entidad legal real.
+     - Formulario apunta a privacidad LFPDPPP (pendiente revision abogado).
+     - Imagenes: placeholders locales, sin CDN externo. Faltan visuales.
+     ==================================================================== -->
+
+<style>
+  :root{
+    --bg:#0a0c10;
+    --bg-2:#0f131a;
+    --panel:#12161e;
+    --ink:#eef2f7;
+    --ink-soft:#aeb6c2;
+    --ink-dim:#79828f;
+    --line:#1d2330;
+    --accent:#2f9ae0;
+    --accent-deep:#1f6fb0;
+    --accent-ink:#0a0c10;
+    --r:14px;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  h1,h2,h3{line-height:1.08;letter-spacing:-0.02em;font-weight:800}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+  .accent{color:var(--accent)}
+
+  /* ---------- NAV ---------- */
+  header.nav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(10,12,16,.82);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-in{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .brand{font-weight:800;font-size:20px;letter-spacing:.04em}
+  .brand b{color:var(--accent)}
+  .nav-links{display:flex;gap:30px;align-items:center}
+  .nav-links a{color:var(--ink-soft);font-size:14px;letter-spacing:.03em;transition:color .2s}
+  .nav-links a:hover{color:var(--ink)}
+  .nav-cta{
+    border:1px solid var(--accent);color:var(--accent);
+    padding:8px 16px;border-radius:999px;font-size:13px;font-weight:600;
+    transition:background .2s,color .2s;
+  }
+  .nav-cta:hover{background:var(--accent);color:var(--accent-ink)}
+  .nav-actions{display:flex;align-items:center;gap:12px}
+  .burger{display:none;background:none;border:0;color:var(--ink);font-size:26px;cursor:pointer}
+  .lang-switcher{position:relative}
+  .lang{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 12px;border-radius:999px;background:transparent;border:1px solid var(--line);color:var(--ink-soft);font-weight:800;font-size:12px;letter-spacing:.14em;cursor:pointer;transition:border-color .2s,color .2s,background .2s}
+  .lang:hover{border-color:var(--accent-deep);color:var(--ink)}
+  .lang-switcher.open .lang{border-color:var(--accent);color:var(--ink)}
+  .lang-caret{color:var(--ink-dim);font-size:14px;line-height:1}
+  .lang-menu{position:absolute;top:calc(100% + 10px);right:0;min-width:180px;background:rgba(15,19,26,.98);border:1px solid var(--line);border-radius:14px;padding:10px;display:grid;gap:6px;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+  .lang-menu[hidden]{display:none}
+  .lang-menu a{padding:10px 12px;border-radius:12px;color:var(--ink-soft);border:1px solid transparent}
+  .lang-menu a:hover{background:rgba(47,154,224,.10);border-color:rgba(47,154,224,.25);color:var(--ink)}
+  .lang-menu a.active{background:rgba(47,154,224,.14);border-color:rgba(47,154,224,.35);color:var(--ink)}
+
+  /* ---------- HERO ---------- */
+  .hero{position:relative;padding:120px 0 100px;overflow:hidden}
+  .hero-grid{
+    position:absolute;inset:0;
+    background:
+      radial-gradient(900px 500px at 78% 35%, rgba(47,154,224,.16), transparent 60%),
+      linear-gradient(180deg,var(--bg),var(--bg-2));
+    z-index:0;
+  }
+  .hero-wave{
+    position:absolute;right:-6%;top:8%;width:62%;height:84%;opacity:.5;z-index:0;
+  }
+  .hero-in{position:relative;z-index:2;max-width:720px}
+  .eyebrow{
+    display:block;font-size:12px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--accent);border:0;
+    padding:0;border-radius:0;margin-bottom:18px;
+  }
+  .hero h1{font-size:clamp(38px,6vw,68px);margin-bottom:20px}
+  .hero .lead{font-size:clamp(17px,2.2vw,21px);color:var(--ink-soft);max-width:600px;margin-bottom:36px}
+  .cta-row{display:flex;gap:14px;flex-wrap:wrap}
+  .btn{
+    display:inline-block;padding:14px 26px;border-radius:999px;
+    font-weight:700;font-size:15px;cursor:pointer;border:1px solid transparent;
+    transition:transform .15s,background .2s,border-color .2s;
+  }
+  .btn:hover{transform:translateY(-2px)}
+  .btn-primary{background:var(--accent);color:var(--accent-ink)}
+  .btn-primary:hover{background:#3aa9f0}
+  .btn-ghost{border-color:var(--line);color:var(--ink)}
+  .btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+
+  /* ---------- SECTION SHELL ---------- */
+  section{position:relative}
+  .band{padding:96px 0;border-top:1px solid var(--line)}
+  .band.alt{background:var(--bg-2)}
+  .sec-eyebrow{font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent-deep);margin-bottom:14px;font-weight:700}
+  .sec-title{font-size:clamp(28px,4vw,44px);margin-bottom:18px;max-width:760px}
+  .sec-sub{color:var(--ink-soft);max-width:680px;font-size:17px;margin-bottom:46px}
+
+  /* ---------- PROBLEM (contrast) ---------- */
+  .contrast{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  .ccard{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:28px}
+  .ccard h3{font-size:18px;margin-bottom:10px;color:var(--ink)}
+  .ccard p{color:var(--ink-dim);font-size:15px}
+  .ccard.win{border-color:var(--accent-deep);background:linear-gradient(180deg,rgba(47,154,224,.08),var(--panel))}
+  .ccard.win h3{color:var(--accent)}
+  .ccard.win p{color:var(--ink-soft)}
+  .principle{
+    margin-top:42px;border-left:3px solid var(--accent);padding:6px 0 6px 22px;
+    font-size:clamp(20px,3vw,30px);font-weight:700;letter-spacing:-.02em;max-width:780px;line-height:1.25;
+  }
+
+  /* ---------- HOW (3 subsystems) ---------- */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;counter-reset:s}
+  .step{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:30px 26px;position:relative}
+  .step::before{
+    counter-increment:s;content:counter(s,decimal-leading-zero);
+    font-size:13px;letter-spacing:.1em;color:var(--accent-deep);font-weight:800;
+    display:block;margin-bottom:18px;
+  }
+  .step h3{font-size:19px;margin-bottom:10px}
+  .step p{color:var(--ink-dim);font-size:15px}
+
+  /* ---------- INGESTA ---------- */
+  .ingesta{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
+  .fmt{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+  .fmt span{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:8px 14px;font-size:13px;color:var(--ink-soft);font-family:ui-monospace,Menlo,monospace}
+  .ingesta-art{
+    aspect-ratio:4/3;border-radius:var(--r);border:1px dashed var(--line);
+    background:var(--panel);display:flex;align-items:center;justify-content:center;
+    color:var(--ink-dim);font-size:13px;text-align:center;padding:20px;
+  }
+
+  /* ---------- 4D + BIDIRECCIONAL (feature rows) ---------- */
+  .feature{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+  .feature + .feature{margin-top:64px}
+  .feature.rev .ftext{order:2}
+  .ftext h3{font-size:clamp(24px,3.4vw,34px);margin-bottom:16px}
+  .ftext p{color:var(--ink-soft);font-size:16px;margin-bottom:14px}
+  .ftext ul{list-style:none;display:grid;gap:10px;margin-top:10px}
+  .ftext li{position:relative;padding-left:22px;color:var(--ink-soft);font-size:15px}
+  .ftext li::before{content:"";position:absolute;left:0;top:9px;width:8px;height:8px;border-radius:50%;background:var(--accent)}
+  .fart{
+    aspect-ratio:5/4;border-radius:var(--r);border:1px dashed var(--line);
+    background:linear-gradient(160deg,var(--panel),var(--bg-2));
+    display:flex;align-items:center;justify-content:center;color:var(--ink-dim);
+    font-size:13px;text-align:center;padding:24px;
+  }
+
+  /* ---------- SECTORES ---------- */
+  .sectors{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .sector{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:24px;transition:border-color .2s,transform .2s}
+  .sector:hover{border-color:var(--accent-deep);transform:translateY(-3px)}
+  .sector .ic{width:34px;height:34px;color:var(--accent);margin-bottom:14px}
+  .sector h3{font-size:18px;margin-bottom:8px}
+  .sector .ap{color:var(--ink-soft);font-size:14px;margin-bottom:6px}
+  .sector .re{color:var(--ink-dim);font-size:14px}
+  .sector .lbl{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-deep);font-weight:700}
+
+  /* ---------- INTEGRACION ---------- */
+  .flow{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+  .flow-step{padding:34px 28px;position:relative;background:var(--panel)}
+  .flow-step + .flow-step{border-left:1px solid var(--line)}
+  .flow-step .n{font-size:13px;font-weight:800;color:var(--accent-deep);letter-spacing:.1em;margin-bottom:14px}
+  .flow-step h3{font-size:19px;margin-bottom:10px}
+  .flow-step p{color:var(--ink-dim);font-size:14px}
+
+  /* ---------- CTA FINAL ---------- */
+  .final{padding:110px 0;text-align:center;border-top:1px solid var(--line);background:radial-gradient(700px 300px at 50% 0%,rgba(47,154,224,.12),transparent 70%)}
+  .final h2{font-size:clamp(30px,5vw,52px);margin-bottom:18px}
+  .final p{color:var(--ink-soft);max-width:520px;margin:0 auto 34px;font-size:18px}
+
+  /* ---------- FOOTER ---------- */
+  footer{background:var(--bg-2);border-top:1px solid var(--line);padding:60px 0 36px}
+  .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:36px;margin-bottom:40px}
+  .foot-brand{font-size:30px;font-weight:800;letter-spacing:.04em}
+  .foot-brand b{color:var(--accent)}
+  footer h4{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:16px}
+  footer a,footer p{color:var(--ink-soft);font-size:14px;display:block;margin-bottom:8px}
+  footer a:hover{color:var(--accent)}
+  .foot-base{border-top:1px solid var(--line);padding-top:24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;color:var(--ink-dim);font-size:13px}
+  .foot-base a{color:var(--ink-dim);display:inline}
+
+  /* ---------- FORMULARIO ---------- */
+  .cform{max-width:640px;margin:44px auto 0;text-align:left}
+  .frow{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .field{margin-bottom:18px;display:flex;flex-direction:column}
+  .field label{font-size:13px;color:var(--ink-soft);margin-bottom:7px;letter-spacing:.02em}
+  .field input,.field select,.field textarea{
+    background:var(--panel);border:1px solid var(--line);border-radius:10px;
+    padding:12px 14px;color:var(--ink);font-size:15px;font-family:inherit;
+    transition:border-color .2s;width:100%;
+  }
+  .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--accent)}
+  .field textarea{resize:vertical}
+  .consent{display:flex;gap:12px;align-items:flex-start;text-align:left;margin:6px 0 4px;font-size:13px;color:var(--ink-soft)}
+  .consent input{margin-top:4px;flex-shrink:0;accent-color:var(--accent)}
+  .consent a{color:var(--accent);text-decoration:underline}
+  .form-note{font-size:14px;margin-top:14px;min-height:20px}
+  .form-note.ok{color:var(--accent)}
+  .form-note.err{color:#e06a6a}
+
+  /* ---------- RESPONSIVE ---------- */
+  @media(max-width:880px){
+    .nav-links{
+      position:fixed;inset:64px 0 auto 0;flex-direction:column;gap:0;
+      background:var(--bg-2);border-bottom:1px solid var(--line);
+      transform:translateY(-120%);transition:transform .3s;padding:10px 0;
+    }
+    .nav-links.open{transform:translateY(0)}
+    .nav-links a{padding:14px 28px;width:100%}
+    .nav-cta{margin:10px 28px}
+    .burger{display:block}
+    .contrast,.steps,.ingesta,.feature,.feature.rev .ftext,.sectors,.flow,.foot-grid,.frow{grid-template-columns:1fr}
+    .feature.rev .ftext{order:0}
+    .flow-step + .flow-step{border-left:0;border-top:1px solid var(--line)}
+  }
+  @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .6s,transform .6s}
+  .reveal.in{opacity:1;transform:none}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <div class="wrap nav-in">
+    <a href="#top" class="brand">CMU<b>Indust</b></a>
+    <nav class="nav-links" id="menu">
+      <a href="#top">Inicio</a>
+      <a href="#problema">Tecnología</a>
+      <a href="#como">Cómo funciona</a>
+      <a href="#sectores">Sectores</a>
+      <a href="#integracion">Integración</a>
+      <a href="#contacto" class="nav-cta">Solicitar diagnóstico</a>
+    </nav>
+    <div class="nav-actions">
+      <div class="lang-switcher" id="langSwitcher">
+        <button class="lang" type="button" aria-label="Seleccionar idioma" aria-haspopup="true" aria-expanded="false" aria-controls="langMenu" id="langToggle">
+          <span>ES</span>
+          <span class="lang-caret" aria-hidden="true">⌄</span>
+        </button>
+        <div class="lang-menu" id="langMenu" hidden>
+          <a href="cmu-indust.html" class="active"><span>Español</span></a>
+          <a href="cmu-indust-en.html"><span>English</span></a>
+        </div>
+      </div>
+      <button class="burger" id="burger" aria-label="Menú">☰</button>
+    </div>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="top">
+  <div class="hero-grid"></div>
+  <svg class="hero-wave" viewBox="0 0 600 400" fill="none" aria-hidden="true">
+    <g stroke="#2f9ae0" stroke-width="1.4" opacity="0.8">
+      <path d="M0 200 Q60 60 120 200 T240 200 T360 200 T480 200 T600 200"/>
+      <path d="M0 210 Q60 90 120 210 T240 210 T360 210 T480 210 T600 210" opacity="0.6"/>
+      <path d="M0 190 Q60 30 120 190 T240 190 T360 190 T480 190 T600 190" opacity="0.4"/>
+    </g>
+  </svg>
+  <div class="wrap hero-in">
+    <span class="eyebrow">Reducción de ruido · Claridad en cada frecuencia</span>
+    <h1>Más allá del procesamiento de señales</h1>
+    <p class="lead">CMU Indust aísla, reconstruye y preserva señales críticas a gran escala, sin la latencia ni las suposiciones del filtrado tradicional.</p>
+    <div class="cta-row">
+      <a href="#contacto" class="btn btn-primary">Solicitar diagnóstico técnico</a>
+      <a href="#problema" class="btn btn-ghost">Conocer la tecnología</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROBLEMA / DIFERENCIADOR ============ -->
+<section class="band" id="problema">
+  <div class="wrap">
+    <p class="sec-eyebrow reveal">El problema</p>
+    <h2 class="sec-title reveal">El ruido ya no se promedia. Se entiende.</h2>
+    <p class="sec-sub reveal">Durante décadas el procesamiento de señales se ha apoyado en métodos que hoy resultan insuficientes en entornos críticos.</p>
+    <div class="contrast">
+      <div class="ccard reveal">
+        <h3>Filtros clásicos (FIR / IIR)</h3>
+        <p>Introducen retardo y deforman la fase de la señal, lo que dificulta el control en tiempo real.</p>
+      </div>
+      <div class="ccard reveal">
+        <h3>Modelos estadísticos (Kalman / Bayes)</h3>
+        <p>Requieren suponer de antemano el tipo de ruido. Si el ruido cambia, el modelo pierde validez.</p>
+      </div>
+      <div class="ccard reveal">
+        <h3>Deep Learning / IA</h3>
+        <p>Operan como cajas negras costosas que no explican por qué tomaron una decisión, algo difícil de sostener en sectores regulados.</p>
+      </div>
+      <div class="ccard win reveal">
+        <h3>CMU Indust · enfoque determinista</h3>
+        <p>Parte de la física de la señal: identifica la fricción energética y la separa en una sola pasada, preservando la estructura.</p>
+      </div>
+    </div>
+    <p class="principle reveal">"La señal no se recupera eliminando ruido. Se recupera entendiendo su estructura."</p>
+  </div>
+</section>
+
+<!-- ============ COMO FUNCIONA ============ -->
+<section class="band alt" id="como">
+  <div class="wrap">
+    <p class="sec-eyebrow reveal">Cómo funciona</p>
+    <h2 class="sec-title reveal">Tres subsistemas, una pasada</h2>
+    <p class="sec-sub reveal">CMU Indust opera sobre la dinámica de la señal en lugar de promediar muestras.</p>
+    <div class="steps">
+      <div class="step reveal">
+        <h3>Detección de fricción</h3>
+        <p>Distingue una oscilación coherente de un pico de ruido impulsivo, sin depender de un umbral fijo. Ignora interferencias e impactos que cegarían a otros filtros.</p>
+      </div>
+      <div class="step reveal">
+        <h3>Coherencia armónica</h3>
+        <p>No busca la frecuencia más alta, sino la más ordenada. Construye una máscara que protege la información resonante y descarta el resto de la entropía.</p>
+      </div>
+      <div class="step reveal">
+        <h3>Retención entrópica</h3>
+        <p>Conserva componentes de baja amplitud que otros filtros descartarían como ruido, manteniendo íntegra la firma única de la señal.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INGESTA UNIVERSAL ============ -->
+<section class="band" id="ingesta">
+  <div class="wrap ingesta">
+    <div>
+      <p class="sec-eyebrow reveal">Ingesta universal</p>
+      <h2 class="sec-title reveal">Una entrada para cualquier fuente</h2>
+      <p class="sec-sub reveal" style="margin-bottom:18px">No importa el formato, el origen o la escala. El motor localiza la dimensión de la información sin importar cómo lleguen los datos, desde flujos en tiempo real hasta archivos de ingeniería pesada.</p>
+      <div class="fmt reveal">
+        <span>.mat</span><span>.wav</span><span>.csv</span><span>.xlsx</span><span>buffers en RAM</span>
+      </div>
+    </div>
+    <div class="ingesta-art reveal">[ Visual pendiente: diagrama de ingesta multiformato ]</div>
+  </div>
+</section>
+
+<!-- ============ 4D + BIDIRECCIONAL ============ -->
+<section class="band alt">
+  <div class="wrap">
+    <p class="sec-eyebrow reveal">Más que limpiar una señal</p>
+    <h2 class="sec-title reveal">Del filtrado al mapeo de la estructura física</h2>
+
+    <div class="feature" style="margin-top:40px">
+      <div class="ftext reveal">
+        <h3>Gemelo digital 4D</h3>
+        <p>Sobre una red de sensores, CMU Indust reconstruye cómo se propaga una vibración o una falla en el espacio y el tiempo, y localiza su origen.</p>
+        <ul>
+          <li>Reconstrucción de la propagación de una anomalía a través de una estructura física.</li>
+          <li>Localización del origen sobre la red de sensores.</li>
+          <li>No solo limpia una señal: mapea la estructura que la produce.</li>
+        </ul>
+      </div>
+      <div class="fart reveal">[ Visual pendiente: localización 4D sobre red de sensores ]</div>
+    </div>
+
+    <div class="feature rev">
+      <div class="ftext reveal">
+        <h3>Control bidireccional</h3>
+        <p>Al conocer dónde y cuándo nace una falla, el sistema puede ordenar correcciones antes de que el problema sea visible para el operador.</p>
+        <ul>
+          <li>Mantenimiento proactivo: anticipa la intervención ante una micro-fricción detectada.</li>
+          <li>Telecomunicaciones adaptativas: ajusta la transmisión ante ruido impulsivo.</li>
+          <li>Cierra el bucle entre detección y actuación.</li>
+        </ul>
+      </div>
+      <div class="fart reveal">[ Visual pendiente: bucle de control cerrado ]</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTORES ============ -->
+<section class="band" id="sectores">
+  <div class="wrap">
+    <p class="sec-eyebrow reveal">Aplicación</p>
+    <h2 class="sec-title reveal">Un problema común en cada industria: el ruido</h2>
+    <p class="sec-sub reveal">CMU Indust se adapta al ruido característico de cada entorno crítico.</p>
+    <div class="sectors">
+
+      <div class="sector reveal">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v6M5 8a7 7 0 0114 0M8 11a4 4 0 018 0M12 8v14"/></svg>
+        <h3>Telecomunicaciones</h3>
+        <p class="ap"><span class="lbl">Aporta</span><br>Separación señal/ruido sin latencia significativa y reconstrucción de portadora por análisis armónico.</p>
+        <p class="re"><span class="lbl">Resultado</span><br>Reducción de BER en canales hostiles y mayor eficiencia espectral.</p>
+      </div>
+
+      <div class="sector reveal">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18M7 14h4"/><circle cx="6" cy="20" r="1.5"/></svg>
+        <h3>Mantenimiento predictivo</h3>
+        <p class="ap"><span class="lbl">Aporta</span><br>Aislamiento de firmas de fricción y detección de microimpactos anómalos en presencia de ruido coherente.</p>
+        <p class="re"><span class="lbl">Resultado</span><br>Detección temprana de microfisuras y reducción de paros no planificados.</p>
+      </div>
+
+      <div class="sector reveal">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18" opacity=".6"/></svg>
+        <h3>Geofísica y perforación (LWD)</h3>
+        <p class="ap"><span class="lbl">Aporta</span><br>Clasificación dinámica entre señal estructurada y ruido caótico, por coherencia temporal y no por amplitud.</p>
+        <p class="re"><span class="lbl">Resultado</span><br>Recuperación de telemetría sin detener la perforación y mayor continuidad operativa.</p>
+      </div>
+
+      <div class="sector reveal">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 12L20 7M12 3a9 9 0 109 9"/></svg>
+        <h3>Acústica naval</h3>
+        <p class="ap"><span class="lbl">Aporta</span><br>Modelado del piso de ruido, cancelación adaptativa del entorno y aislamiento de señales coherentes.</p>
+        <p class="re"><span class="lbl">Resultado</span><br>Mejora en detección y clasificación acústica, con reducción de falsos negativos.</p>
+      </div>
+
+      <div class="sector reveal">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="5" rx="1"/><rect x="4" y="11" width="16" height="5" rx="1"/><circle cx="8" cy="6.5" r="1"/><circle cx="8" cy="13.5" r="1"/></svg>
+        <h3>Microelectrónica (MRAM / RAM)</h3>
+        <p class="ap"><span class="lbl">Aporta</span><br>Filtrado lógico por coherencia de señal e integración a nivel de arquitectura digital, sin aislamiento físico adicional.</p>
+        <p class="re"><span class="lbl">Resultado</span><br>Mayor integridad de datos y reducción de errores de lectura.</p>
+      </div>
+
+      <!-- ====== SECTORES SIN FUENTE (pendiente validar con Erick) ======
+           Reactivar solo si hay respaldo verificado en whitepaper.
+           Dispositivos Medicos: NO publicar sin respaldo (dominio regulado).
+
+      <div class="sector reveal">
+        <h3>Redes Eléctricas</h3> ...
+      </div>
+      <div class="sector reveal">
+        <h3>Sismología</h3> ...
+      </div>
+      <div class="sector reveal">
+        <h3>Dispositivos Médicos</h3> ...
+      </div>
+      ============================================================ -->
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ INTEGRACION ============ -->
+<section class="band alt" id="integracion">
+  <div class="wrap">
+    <p class="sec-eyebrow reveal">Integración</p>
+    <h2 class="sec-title reveal">De la prueba técnica a la integración empresarial</h2>
+    <p class="sec-sub reveal">Un camino por etapas, sin compromisos prematuros.</p>
+    <div class="flow">
+      <div class="flow-step reveal">
+        <div class="n">01</div>
+        <h3>Diagnóstico técnico</h3>
+        <p>Analizamos tu caso de uso, restricciones, hardware y entorno.</p>
+      </div>
+      <div class="flow-step reveal">
+        <div class="n">02</div>
+        <h3>Piloto controlado</h3>
+        <p>Validamos latencia, precisión, estabilidad y trazabilidad en tu operación.</p>
+      </div>
+      <div class="flow-step reveal">
+        <div class="n">03</div>
+        <h3>Licencia e integración</h3>
+        <p>Desplegamos como SDK, módulo integrado, servidor local o solución a medida.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACTO (formulario inline) ============ -->
+<section class="final" id="contacto">
+  <div class="wrap">
+    <h2>Lleva CMU Indust a tu entorno</h2>
+    <p>Cuéntanos tu caso de uso y agendamos un diagnóstico técnico.</p>
+
+    <form class="cform reveal" id="cform" novalidate>
+      <div class="frow">
+        <div class="field">
+          <label for="nombre">Nombre</label>
+          <input id="nombre" name="nombre" type="text" autocomplete="name" required>
+        </div>
+        <div class="field">
+          <label for="empresa">Empresa</label>
+          <input id="empresa" name="empresa" type="text" autocomplete="organization">
+        </div>
+      </div>
+      <div class="frow">
+        <div class="field">
+          <label for="email">Correo</label>
+          <input id="email" name="email" type="email" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="telefono">Teléfono</label>
+          <input id="telefono" name="telefono" type="tel" autocomplete="tel">
+        </div>
+      </div>
+      <div class="field">
+        <label for="sector">Sector</label>
+        <select id="sector" name="sector">
+          <option value="">Selecciona una opción</option>
+          <option>Telecomunicaciones</option>
+          <option>Mantenimiento predictivo</option>
+          <option>Geofísica y perforación (LWD)</option>
+          <option>Acústica naval</option>
+          <option>Microelectrónica (MRAM / RAM)</option>
+          <option>Otro</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="mensaje">Describe tu caso de uso</label>
+        <textarea id="mensaje" name="mensaje" rows="4" required></textarea>
+      </div>
+
+      <!-- Consentimiento LFPDPPP obligatorio -->
+      <label class="consent">
+        <input type="checkbox" id="consent" name="consent" required>
+        <span>He leído y acepto el <a href="privacidad-indust.html" target="_blank" rel="noopener">aviso de privacidad</a> y autorizo el tratamiento de mis datos conforme a la LFPDPPP.</span>
+      </label>
+
+      <button type="submit" class="btn btn-primary" style="margin-top:8px">Solicitar diagnóstico técnico</button>
+      <p class="form-note" id="form-note" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-brand">CMU<b>Indust</b></div>
+        <p style="margin-top:14px;max-width:320px">Extracción y reconstrucción de señal para entornos de alta entropía.</p>
+      </div>
+      <div>
+        <h4>Navegación</h4>
+        <a href="#problema">Tecnología</a>
+        <a href="#como">Cómo funciona</a>
+        <a href="#sectores">Sectores</a>
+        <a href="#integracion">Integración</a>
+      </div>
+      <div>
+        <h4>Contacto</h4>
+        <p>+52 222 964 8206</p>
+        <p>Puebla, México</p>
+        <a href="#contacto">Solicitar diagnóstico</a>
+        <a href="privacidad-indust.html">Aviso de privacidad</a>
+      </div>
+    </div>
+    <div class="foot-base">
+      <span>© 2026 [RAZÓN SOCIAL]. Todos los derechos reservados.</span>
+      <span><a href="privacidad-indust.html">Aviso de privacidad</a> · Documento técnico bajo solicitud y NDA</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Mobile menu
+  const burger=document.getElementById('burger');
+  const menu=document.getElementById('menu');
+  burger.addEventListener('click',()=>menu.classList.toggle('open'));
+  menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>menu.classList.remove('open')));
+
+  // Scroll reveal
+  const io=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});
+  },{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  (()=>{
+    function initLang(switcherId,toggleId,menuId){
+      const switcher=document.getElementById(switcherId);
+      const toggle=document.getElementById(toggleId);
+      const menu=document.getElementById(menuId);
+      if(!switcher||!toggle||!menu) return;
+
+      function close(){
+        menu.hidden=true;
+        switcher.classList.remove('open');
+        toggle.setAttribute('aria-expanded','false');
+      }
+
+      function open(){
+        menu.hidden=false;
+        switcher.classList.add('open');
+        toggle.setAttribute('aria-expanded','true');
+      }
+
+      toggle.addEventListener('click',(event)=>{
+        event.stopPropagation();
+        if(menu.hidden) open();
+        else close();
+      });
+
+      document.addEventListener('click',(event)=>{
+        if(!switcher.contains(event.target)) close();
+      });
+
+      document.addEventListener('keydown',(event)=>{
+        if(event.key==='Escape') close();
+      });
+    }
+
+    initLang('langSwitcher','langToggle','langMenu');
+  })();
+
+  // Formulario de contacto
+  // NOTA: maqueta sin backend. Conectar el envio real aqui
+  // (Wix Forms, API propia o servicio de correo). No usar CDN externo.
+  const form=document.getElementById('cform');
+  const note=document.getElementById('form-note');
+  form.addEventListener('submit',(ev)=>{
+    ev.preventDefault();
+    note.className='form-note';
+    if(!form.checkValidity()){
+      note.textContent='Revisa los campos obligatorios.';
+      note.classList.add('err');
+      return;
+    }
+    if(!document.getElementById('consent').checked){
+      note.textContent='Debes aceptar el aviso de privacidad para continuar.';
+      note.classList.add('err');
+      return;
+    }
+    // TODO: enviar datos al backend / servicio de formularios
+    note.textContent='Gracias. Hemos recibido tu solicitud y te contactaremos pronto.';
+    note.classList.add('ok');
+    form.reset();
+  });
+</script>
+</body>
+</html>
