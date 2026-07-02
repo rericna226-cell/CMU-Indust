@@ -1,0 +1,58 @@
+{
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/home",
+      "permanent": false
+    },
+    {
+      "source": "/index.html",
+      "destination": "/home",
+      "permanent": false
+    },
+    {
+      "source": "/index-en.html",
+      "destination": "/home-en",
+      "permanent": false
+    },
+    {
+      "source": "/cmu-indust.html",
+      "destination": "/home",
+      "permanent": false
+    },
+    {
+      "source": "/cmu-indust-en.html",
+      "destination": "/home-en",
+      "permanent": false
+    },
+    {
+      "source": "/privacidad-indust.html",
+      "destination": "/privacy",
+      "permanent": false
+    },
+    {
+      "source": "/privacidad-indust-en.html",
+      "destination": "/privacy-en",
+      "permanent": false
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/home",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/home-en",
+      "destination": "/index-en.html"
+    },
+    {
+      "source": "/privacy",
+      "destination": "/privacidad-indust.html"
+    },
+    {
+      "source": "/privacy-en",
+      "destination": "/privacidad-indust-en.html"
+    }
+  ]
+}
+

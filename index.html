@@ -63,7 +63,7 @@
   }
   .nav-in{display:flex;align-items:center;justify-content:space-between;height:64px}
   .brand{display:flex;align-items:center;font-weight:800;font-size:20px;letter-spacing:.04em}
-  .brand img{height:34px;width:auto;display:block}
+  .brand img{height:44px;width:auto;display:block}
   .brand b{color:var(--accent)}
   .nav-links{display:flex;gap:30px;align-items:center}
   .nav-links a{color:var(--ink-soft);font-size:14px;letter-spacing:.03em;transition:color .2s}
@@ -153,6 +153,7 @@
 
   /* ---------- INGESTA ---------- */
   .ingesta{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
+  .ingesta.no-art{grid-template-columns:1fr}
   .fmt{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
   .fmt span{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:8px 14px;font-size:13px;color:var(--ink-soft);font-family:ui-monospace,Menlo,monospace}
   .ingesta-art{
@@ -163,6 +164,7 @@
 
   /* ---------- 4D + BIDIRECCIONAL (feature rows) ---------- */
   .feature{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+  .feature.no-art{grid-template-columns:1fr}
   .feature + .feature{margin-top:64px}
   .feature.rev .ftext{order:2}
   .ftext h3{font-size:clamp(24px,3.4vw,34px);margin-bottom:16px}
@@ -204,7 +206,7 @@
   footer{background:var(--bg-2);border-top:1px solid var(--line);padding:60px 0 36px}
   .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:36px;margin-bottom:40px}
   .foot-brand{display:flex;align-items:center;font-size:30px;font-weight:800;letter-spacing:.04em}
-  .foot-brand img{height:40px;width:auto;display:block}
+  .foot-brand img{height:54px;width:auto;display:block}
   .foot-brand b{color:var(--accent)}
   footer h4{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:16px}
   footer a,footer p{color:var(--ink-soft);font-size:14px;display:block;margin-bottom:8px}
@@ -356,7 +358,7 @@
 
 <!-- ============ INGESTA UNIVERSAL ============ -->
 <section class="band" id="ingesta">
-  <div class="wrap ingesta">
+  <div class="wrap ingesta no-art">
     <div>
       <p class="sec-eyebrow reveal">Ingesta universal</p>
       <h2 class="sec-title reveal">Una entrada para cualquier fuente</h2>
@@ -365,7 +367,6 @@
         <span>.mat</span><span>.wav</span><span>.csv</span><span>.xlsx</span><span>buffers en RAM</span>
       </div>
     </div>
-    <div class="ingesta-art reveal">[ Visual pendiente: diagrama de ingesta multiformato ]</div>
   </div>
 </section>
 
@@ -375,7 +376,7 @@
     <p class="sec-eyebrow reveal">Más que limpiar una señal</p>
     <h2 class="sec-title reveal">Del filtrado al mapeo de la estructura física</h2>
 
-    <div class="feature" style="margin-top:40px">
+    <div class="feature no-art" style="margin-top:40px">
       <div class="ftext reveal">
         <h3>Gemelo digital 4D</h3>
         <p>Sobre una red de sensores, CMU Indust reconstruye cómo se propaga una vibración o una falla en el espacio y el tiempo, y localiza su origen.</p>
@@ -385,10 +386,9 @@
           <li>No solo limpia una señal: mapea la estructura que la produce.</li>
         </ul>
       </div>
-      <div class="fart reveal">[ Visual pendiente: localización 4D sobre red de sensores ]</div>
     </div>
 
-    <div class="feature rev">
+    <div class="feature rev no-art">
       <div class="ftext reveal">
         <h3>Control bidireccional</h3>
         <p>Al conocer dónde y cuándo nace una falla, el sistema puede ordenar correcciones antes de que el problema sea visible para el operador.</p>
@@ -398,7 +398,6 @@
           <li>Cierra el bucle entre detección y actuación.</li>
         </ul>
       </div>
-      <div class="fart reveal">[ Visual pendiente: bucle de control cerrado ]</div>
     </div>
   </div>
 </section>
