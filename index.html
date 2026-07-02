@@ -62,7 +62,8 @@
     border-bottom:1px solid var(--line);
   }
   .nav-in{display:flex;align-items:center;justify-content:space-between;height:64px}
-  .brand{font-weight:800;font-size:20px;letter-spacing:.04em}
+  .brand{display:flex;align-items:center;font-weight:800;font-size:20px;letter-spacing:.04em}
+  .brand img{height:26px;width:auto;display:block}
   .brand b{color:var(--accent)}
   .nav-links{display:flex;gap:30px;align-items:center}
   .nav-links a{color:var(--ink-soft);font-size:14px;letter-spacing:.03em;transition:color .2s}
@@ -202,7 +203,8 @@
   /* ---------- FOOTER ---------- */
   footer{background:var(--bg-2);border-top:1px solid var(--line);padding:60px 0 36px}
   .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:36px;margin-bottom:40px}
-  .foot-brand{font-size:30px;font-weight:800;letter-spacing:.04em}
+  .foot-brand{display:flex;align-items:center;font-size:30px;font-weight:800;letter-spacing:.04em}
+  .foot-brand img{height:32px;width:auto;display:block}
   .foot-brand b{color:var(--accent)}
   footer h4{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:16px}
   footer a,footer p{color:var(--ink-soft);font-size:14px;display:block;margin-bottom:8px}
@@ -255,7 +257,7 @@
 <!-- ============ NAV ============ -->
 <header class="nav">
   <div class="wrap nav-in">
-    <a href="#top" class="brand">CMU<b>Indust</b></a>
+    <a href="#top" class="brand"><img src="CMU%20Indust.png" alt="CMU Indust"></a>
     <nav class="nav-links" id="menu">
       <a href="#top">Inicio</a>
       <a href="#problema">Tecnología</a>
@@ -550,7 +552,7 @@
   <div class="wrap">
     <div class="foot-grid">
       <div>
-        <div class="foot-brand">CMU<b>Indust</b></div>
+        <div class="foot-brand"><img src="CMU%20Indust.png" alt="CMU Indust"></div>
         <p style="margin-top:14px;max-width:320px">Extracción y reconstrucción de señal para entornos de alta entropía.</p>
       </div>
       <div>
