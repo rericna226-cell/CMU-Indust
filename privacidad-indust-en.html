@@ -29,7 +29,8 @@
   /* NAV */
   header.nav{position:sticky;top:0;z-index:50;background:rgba(10,12,16,.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
   .nav-in{display:flex;align-items:center;justify-content:space-between;height:64px;max-width:1180px;margin:0 auto;padding:0 28px}
-  .brand{font-weight:800;font-size:20px;letter-spacing:.04em}
+  .brand{display:flex;align-items:center;font-weight:800;font-size:20px;letter-spacing:.04em}
+  .brand img{height:26px;width:auto;display:block}
   .brand b{color:var(--accent)}
   .nav-links{display:flex;gap:30px;align-items:center}
   .nav-links a{color:var(--ink-soft);font-size:14px;letter-spacing:.03em;transition:color .2s}
@@ -76,7 +77,8 @@
   /* FOOTER */
   footer{background:var(--bg-2);border-top:1px solid var(--line);padding:54px 0 34px}
   .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:36px;margin-bottom:36px;max-width:1180px;margin-left:auto;margin-right:auto;padding:0 28px}
-  .foot-brand{font-size:28px;font-weight:800;letter-spacing:.04em}
+  .foot-brand{display:flex;align-items:center;font-size:28px;font-weight:800;letter-spacing:.04em}
+  .foot-brand img{height:30px;width:auto;display:block}
   .foot-brand b{color:var(--accent)}
   footer h4{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:16px}
   footer a,footer p{color:var(--ink-soft);font-size:14px;display:block;margin-bottom:8px}
@@ -100,7 +102,7 @@
 
 <header class="nav">
   <div class="nav-in">
-    <a href="index-en.html#top" class="brand">CMU<b>Indust</b></a>
+    <a href="index-en.html#top" class="brand"><img src="CMU%20Indust.png" alt="CMU Indust"></a>
     <nav class="nav-links" id="menu">
       <a href="index-en.html#problem">Technology</a>
       <a href="index-en.html#how">How it works</a>
@@ -227,7 +229,7 @@
 <footer>
   <div class="foot-grid">
     <div>
-      <div class="foot-brand">CMU<b>Indust</b></div>
+      <div class="foot-brand"><img src="CMU%20Indust.png" alt="CMU Indust"></div>
       <p style="margin-top:14px;max-width:320px">Signal extraction and reconstruction for high-entropy environments.</p>
     </div>
     <div>
